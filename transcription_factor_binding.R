@@ -46,7 +46,7 @@ hotspot_id <- final_hotspots %>%
 hotspot_id$Type <- "Gene"
 colnames(hotspot_id) <- c("ID", "Type")
 
-#b.TFs
+#b.TFs 
 TF_id <- fimo %>% 
   select(Family) %>% 
   unique()
