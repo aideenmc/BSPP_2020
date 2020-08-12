@@ -84,9 +84,15 @@ gene_hotspot_ids$Group <- ifelse(gene_hotspot_ids$Hotspot %in% nonh_nonmet == TR
 gene_hotspot_ids <- gene_hotspot_ids %>% 
   unique()
 
+<<<<<<< HEAD
 #write to table
 write.table(gene_hotspot_ids, "gene_hotspot_ids.txt", row.names = FALSE, quote = FALSE, sep = "\t")
 
 
 
 
+=======
+write.table(gene_hotspot_ids, "gene_hotspot_ids.txt", row.names = FALSE, quote = FALSE, sep = "\t")
+
+
+>>>>>>> d4666abd18281570d696ac3f1793051d64442934
