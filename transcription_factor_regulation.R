@@ -85,5 +85,52 @@ nona_gene_hotspot_tf <- as.data.frame(na.omit(gene_hotspot_tf))
 nona_gene_hotspot_tf <- unique(nona_gene_hotspot_tf)
 
 #how many DIFFERENT TF interactions per hotspot
-#plot this?
+tf_hotspot_counts <- as.data.frame(table(nona_gene_hotspot_tf$Hotspot))
 
+p <- ggplot(data=tf_hotspot_counts, aes(x=Var1, y=Freq)) +
+  geom_bar(stat="identity", fill="deeppink") +
+  theme_minimal()
+
+p
+
+#grouping by cluster groups
+colnames(tf_hotspot_counts) <- c("Hotspot", "Frequency")
+nonh_nonmet <- c(2,3,6,12,16,17,19,20,21,23,40,24,26,28,31,35,39,41,42,43)
+nonh_met <- c(8,13,15,44,11,27,34,36)
+par_met<- c(7,9,10,32)
+par_nonmet<- c(1,4,5,14,18,22,25,29,30,33,37,38)
+
+tf_hotspot_counts$Group <- ifelse(tf_hotspot_counts$Hotspot %in% nonh_nonmet == TRUE, "Nonhomologous Non-Metabolic", 
+                                 ifelse(tf_hotspot_counts$Hotspot %in% nonh_met == TRUE, "Nonhomologous Metabolic",
+                                        ifelse(tf_hotspot_counts$Hotspot %in% par_met==TRUE, "Paralagous Metabolic",
+                                               ifelse(tf_hotspot_counts$Hotspot %in% par_nonmet==TRUE, "Paralagous Non-Metabolic", "x"))))
+
+#factor hotspots to make visualising nicer
+tf_hotspot_counts$Hotspot <- factor(tf_hotspot_counts$Hotspot, 
+                                    levels = c(2,3,6,12,16,17,19,20,21,23,24,26,28,31,35,39,40,41,42,43,
+                                               8,11,13,15,27,34,36,44,
+                                               7,9,10,32,
+                                               1,4,5,14,18,22,25,29,30,33,37,38))
+
+
+q <- ggplot(data=tf_hotspot_counts, aes(x=Hotspot, y=Frequency, fill = Group)) +
+  ggtitle("Number of Transcription Factor Interactions per Hotspot") +
+  xlab("Hotspot") +
+  ylab("Number of Transcription Factor Interactions") +
+  geom_bar(stat="identity") +
+  theme_minimal()
+
+q
+
+#plotting number of transcription factor interactions per group
+tf_group_counts <- as.data.frame(table(gene_hotspot_ids$Group))
+colnames(tf_group_counts) <- c("Group", "Freq")
+
+r <- q <- ggplot(data=tf_group_counts, aes(x=Group, y=Freq, fill = Group)) +
+  ggtitle("Number of Transcription Factor Interactions per Group") +
+  xlab("Gene Cluster Group") +
+  ylab("Number of Transcription Factor Interactions") +
+  geom_bar(stat="identity") +
+  theme_minimal()
+
+r
