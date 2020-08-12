@@ -1,6 +1,7 @@
 #Transcription factor regulation analysis
 library(readr)
 library(dplyr)
+library(ggplot2)
 
 #importing data
 #1. Hotspot genes
@@ -75,4 +76,14 @@ write.table(ID_and_Type, "new_ID_and_Type.txt", row.names = FALSE, quote = FALSE
 gene_hotspot_ids <- read_delim("gene_hotspot_ids.txt", 
                                "\t", escape_double = FALSE, trim_ws = TRUE)
 
+#investigating what hotspot tf interactions are located
+gene_hotspot <- gene_hotspot_ids %>% 
+  select(-Group)
+
+gene_hotspot_tf <- left_join(gene_hotspot, tfs, by="GeneID")
+nona_gene_hotspot_tf <- as.data.frame(na.omit(gene_hotspot_tf))
+nona_gene_hotspot_tf <- unique(nona_gene_hotspot_tf)
+
+#how many DIFFERENT TF interactions per hotspot
+#plot this?
 
