@@ -118,7 +118,10 @@ q <- ggplot(data=tf_hotspot_counts, aes(x=Hotspot, y=Frequency, fill = Group)) +
   xlab("Hotspot") +
   ylab("Number of Transcription Factor Interactions") +
   geom_bar(stat="identity") +
-  theme_minimal()
+  theme_minimal() +
+  theme(plot.title = element_text(size = 14, face = "bold.italic", family = "Helvetica", hjust = 0.5),
+        axis.title.x = element_text(size = 14, face = "bold", family = "Helvetica"),
+        axis.title.y = element_text(size = 14, face = "bold", family = "Helvetica"))
 
 q
 
