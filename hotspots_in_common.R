@@ -16,6 +16,7 @@ dataset1 <- split(final_hotspots , f = final_hotspots$Hotspot)
 
 dataset2 <- split(final_hotspots , f = final_hotspots$Hotspot)
 
+dataset1[[1]][['Hotspot']]
 
 #matchy function takes two lists of hotspots and returns a list with hotspots that are >80% similar
 matchy <- function(out, out2){
@@ -28,6 +29,10 @@ matchy <- function(out, out2){
   
     #iterate through list/dataset number 2
     for (j in 1:length(out2)) {
+        #if hotspots are the same, skip the comparison code      
+        if (out[[i]][['Hotspot']] == out2[[j]][['Hotspot']]){
+          next()
+        }
         #need to determine which hotspot has most genes, assign this to max, and the hotspot with least genes is min
         max <- if (nrow(out[[i]]) > nrow(out2[[j]])) out[[i]] else if (nrow(out[[i]]) == nrow(out2[[j]])) out[[i]] else out2[[j]]
         min <- if (nrow(out[[i]]) < nrow(out2[[j]])) out[[i]] else if (nrow(out[[i]]) == nrow(out2[[j]])) out2[[j]] else out2[[j]]
