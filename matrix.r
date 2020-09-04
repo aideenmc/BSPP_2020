@@ -156,23 +156,3 @@ n_df$sum <- rowSums(n[,1:9])+1
 
 #table showing the count distribution
 count(n_df$sum)
-
-#filter for "broad spectrum" hotspots
-n_df_4 <- n_df %>%
-  filter(sum == 4)
-
-n_df_3 <- n_df %>% 
-  filter(sum == 3)
-
-n_df_2 <- n_df %>%
-  filter(sum == 2)
-
-#extract hotspots from all_data
-hotspots_2 <- all_data %>% 
-  filter(Hotspot_Number %in% rownames(n_df_2))
-
-hotspots_3 <- all_data %>% 
-  filter(Hotspot_Number %in% rownames(n_df_3))
-
-hotspots_4 <- all_data %>% 
-  filter(Hotspot_Number %in% rownames(n_df_4))
