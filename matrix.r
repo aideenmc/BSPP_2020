@@ -34,7 +34,6 @@ all_data <- bind_rows(fusarium_og_hotspots, septoria_erp_hotspots, powdery_rust_
 #split by stress/disease
 all_data_split <- split(all_data , f = all_data$`Disease/Stress`)
 
-all_data_split[[1]][["Disease/Stress"]]
 #create an empty matrix with rownames and column names = unique hotspot identifiers
 m <- matrix(0, nrow = length(all_data_split), ncol = length(all_data_split))
 
@@ -62,8 +61,8 @@ matchy <- function(out, out2){
   #iterate through list/dataset number 1
   for (i in 1:length(out)){
     #iterate through list/dataset number 2
-    #for (j in i:length(out2)) {
-    for (j in 1:length(out2)) {
+    for (j in i:length(out2)) {
+    #for (j in 1:length(out2)) {
       #if hotspots are the same, skip the comparison code      
       if (out[[i]][['Hotspot_Number']][[1]] == out2[[j]][['Hotspot_Number']][[1]]){
         next()
@@ -117,8 +116,6 @@ hotspots_in_common <- matchy(dataset1, dataset2)
 
 testdf <- bind_rows(hotspots_in_common)
 
-#need to remove duplicates
-#unique_df <- testdf[!duplicated(testdf[,c('stress1','stress2')]),]
 
 #now to add 1s to matrix 
 #extract stress columns to use as i and j values
@@ -132,10 +129,11 @@ j_val <- testdf %>%
 coordinates <-testdf %>% 
   select(stress1, stress2)
 
+#change col names 
 colnames(coordinates) <- c("x", "y")
 
 
-
+#add 1 to matrix for specified coordinates
 for (i in 1:nrow(coordinates)){
   x <- coordinates[i,1]
   y <- coordinates[i,2]
@@ -150,7 +148,69 @@ for (i in 1:nrow(coordinates)){
   }
 }
 
+
 #now for all hotspot results
+#create an empty matrix with rownames and column names = unique hotspot identifiers
+n <- matrix(0, nrow = length(dataset1), ncol = length(all_data_split))
 
 
+#create an empty vector to be populated by hotspot IDs
+stress_ids <- vector(mode = "character", length = length(all_data_split))
+hotspot_ids <- vector(mode = "character", length = length(dataset1))
+
+for (a in 1:length(all_data_split)){
+  stress_ids[[a]] <- all_data_split[[a]][["Disease/Stress"]][[1]]
+}
+
+for (b in 1:length(dataset1)){
+  hotspot_ids[[b]] <- dataset1[[b]][["Hotspot_Number"]][[1]]
+}
+
+
+#assign these identifiers as row and column names
+colnames(n) <- stress_ids
+rownames(n) <- hotspot_ids
+
+
+#now to add 1s to matrix 
+#extract stress columns to use as i and j values
+i_val <- testdf %>% 
+  pull(comparison1)
+
+j_val <- testdf %>% 
+  pull(stress2)
+
+#assign 1 to these positions in the matrix
+coordinates <-testdf %>% 
+  select(comparison1, stress2)
+
+#change col names 
+colnames(coordinates) <- c("x", "y")
+
+
+#add 1 to matrix for specified coordinates
+for (i in 1:nrow(coordinates)){
+  x <- coordinates[i,1]
+  y <- coordinates[i,2]
+  for (d in 1:nrow(n)){
+    if (x == rownames(n)[d]){
+      for(e in 1:ncol(n)){
+        if(y==colnames(n)[e]){
+          n[d,e]<-1
+        }
+      }
+    }
+  }
+}
+
+n_df <- as.data.frame(n)
+n_df$sum <- rowSums(n[,1:9])+1
+count(n_df$sum)
+
+#filter for "broad spectrum" hotspots
+n_df_broad <- n_df %>%
+  filter(sum == 3)
+
+#extract hotspots from results
+#write a function
 
