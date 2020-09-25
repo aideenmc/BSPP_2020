@@ -1,4 +1,5 @@
 #script to take input list of gene IDs and return a fasta file with sequences
+#need full_fasta.csv which can be found on the drive
 #importing relevant packages
 library(dplyr)
 library(readr)
@@ -8,11 +9,13 @@ library(tidyr)
 #column name must be geneID
 #if using transcript ids, can trim the trailing number with the following code;
 #list$geneid <- substr(list$transcriptid, 1, nchar(list$transcriptid)-2)
-example_list <- read_csv("hotspot_id.txt")
+example_list <- read_csv("all_hotspot_genes.csv")
+
 colnames(example_list) <- c("geneID")
 
 #import all fasta sequences from IWGSC
 full_fasta <- read_csv("full_fasta.csv")
+
 
 #function get_fasta takes two inputs
 # 1. id_list: .txt file:  list of geneIDs to get sequences of
@@ -33,4 +36,4 @@ get_fasta <- function(id_list, full_fasta){
 to_fasta <- get_fasta(example_list, full_fasta)
 
 #write to file, specify the name of file
-write.table(to_fasta, "example_fasta.txt", sep='\n', quote = FALSE, row.names = FALSE)
+write.table(to_fasta, "all_hotspot_genes_fasta.txt", sep='\n', quote = FALSE, row.names = FALSE)
